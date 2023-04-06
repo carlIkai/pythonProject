@@ -72,25 +72,76 @@ class LemonadeStand:
     def get_name(self) -> str:
         return self._stand_name
 
-    def add_menu_item(self, menu: object) -> None:
+    def add_menu_item(self, menu) -> None:
         self._menu_item_dict.update({menu.get_name(): menu})
+
+
+    def print_sales_for_day(self) -> None:
+        print(self._sales_for_day_log)
+
+    def enter_sales_for_today(self, sale_item: dict) -> None:
+        for key in sale_item:
+            if key in self._menu_item_dict:
+                day_sales = SalesForDay(self._current_day, sale_item)
+                self._sales_for_day_log.append(day_sales)
+                self._current_day += 1
+                #print(day_sales.get_day())
+                #print(day_sales.get_sales_dict())
+            #else:
+                #print("Not In Dict")
+
+
+    def sales_of_menu_item_for_day(self, day_num: int, menu_item: str) -> int:
+        for i in self._sales_for_day_log:
+           if i.get_day() == day_num:
+               dayz = i.get_sales_dict()
+               if menu_item in dayz:
+                   print(dayz.get(menu_item))
+            #for j in i:
+                #if day_num == j:
+                   #print(j.get_sales_dict())
+                   #print(daily_sales)
+
+                   #if menu_item in day_sales:
+                       #print(day_sales.get(menu_item))
 
 
 
 def main() -> None:
     sales: dict
 
+sales2 = {
+    "lemonade": 5,
+    "Ricky Lime": 2,
+    "Ricky": 8,
+    "soda": 9,
+    }
+
 sales = {
     "lemonade": 5,
-    "cookie": 2
+    "Ricky Lime": 2,
+    "Ricky": 8,
+    "soda": 9,
     }
 
 ##sales1 = SalesForDay(20, sales)
 ##print(sales1.get_day())
 ##print(sales1.get_sales_dict())
 menu1 = MenuItem("Lime Ricky", 2.50, 3.50)
+menu2 = MenuItem("Lim", 2.50, 3.50)
+menu3 = MenuItem("Ricky", 2.50, 3.50)
 
 carl = LemonadeStand("carl")
-print(carl.add_menu_item(menu1))
+carl.add_menu_item(menu1)
+carl.add_menu_item(menu2)
+carl.add_menu_item(menu3)
+
+carl.enter_sales_for_today(sales)
+carl.enter_sales_for_today(sales2)
+carl.sales_of_menu_item_for_day(1, "Ricky Lime")
+#carl.print_sales_for_day()
+#carl.print_menu()
+
+
 
 main()
