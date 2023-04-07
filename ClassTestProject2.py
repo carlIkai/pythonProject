@@ -76,27 +76,31 @@ class LemonadeStand:
         self._menu_item_dict.update({menu.get_name(): menu})
 
 
+
     def print_sales_for_day(self) -> None:
-        print(self._sales_for_day_log)
+        print(self._menu_item_dict)
 
     def enter_sales_for_today(self, sale_item: dict) -> None:
+        test: bool = True
         for key in sale_item:
-            if key in self._menu_item_dict:
-                day_sales = SalesForDay(self._current_day, sale_item)
-                self._sales_for_day_log.append(day_sales)
-                self._current_day += 1
-                #print(day_sales.get_day())
-                #print(day_sales.get_sales_dict())
-            #else:
-                #print("Not In Dict")
+            if not key in self._menu_item_dict:
+                test = False
+        if test == True:
+            day_sales = SalesForDay(self._current_day, sale_item)
+            self._sales_for_day_log.append(day_sales)
+            self._current_day += 1
+            print(day_sales.get_day())
+            print(day_sales.get_sales_dict())
+        else:
+            print("InvalidSalesItemError")
 
 
     def sales_of_menu_item_for_day(self, day_num: int, menu_item: str) -> int:
         for i in self._sales_for_day_log:
            if i.get_day() == day_num:
-               dayz = i.get_sales_dict()
-               if menu_item in dayz:
-                   print(dayz.get(menu_item))
+               day_menu = i.get_sales_dict()
+               if menu_item in day_menu:
+                  return(day_menu.get(menu_item))
             #for j in i:
                 #if day_num == j:
                    #print(j.get_sales_dict())
@@ -105,43 +109,82 @@ class LemonadeStand:
                    #if menu_item in day_sales:
                        #print(day_sales.get(menu_item))
 
+    def total_sales_for_menu_item(self, menu_item_name: str) -> int:
+        # Annotate variables
+        total: int = 0
+        for i in self._sales_for_day_log:
+            item_amount = carl.sales_of_menu_item_for_day(i.get_day(), menu_item_name)
+            total += item_amount
+        return total
+
+    def profit_for_menu_item(self, menu_item: str) -> float:
+        if menu_item in self._menu_item_dict:
+           val = self._menu_item_dict[menu_item]
+           return((val.get_selling_price() - val.get_wholesale_cost()) * (carl.total_sales_for_menu_item(menu_item)))
+
+    def total_profit_stand(self):
+
 
 
 def main() -> None:
     sales: dict
 
-sales2 = {
-    "lemonade": 5,
-    "Ricky Lime": 2,
-    "Ricky": 8,
+
+sales1 = {
+    "lemonade": 50,
+    "Ricky Lime": 8,
+    "Ricky T": 19,
     "soda": 9,
+}
+sales2 = {
+    "Lim": 5,
+    "Lime Ricky": 2,
+    "Ricky": 5,
+
     }
 
-sales = {
-    "lemonade": 5,
-    "Ricky Lime": 2,
-    "Ricky": 8,
-    "soda": 9,
+sales3 = {
+
+    "Lime Ricky": 2,
+    "Ricky": 5,
+
     }
+sales4 = {
+    "Ricky": 5,
+    "soda": 100
+}
+sales5 = {
+    "Ricky": 5,
+    "Lim": 19,
+    "Lime Ricky": 9,
+}
+sales6 = {
+    "Lime Ricky": 8,
+    "Lim": 19,
+    "Ricky": 5,
+}
 
 ##sales1 = SalesForDay(20, sales)
 ##print(sales1.get_day())
 ##print(sales1.get_sales_dict())
 menu1 = MenuItem("Lime Ricky", 2.50, 3.50)
 menu2 = MenuItem("Lim", 2.50, 3.50)
-menu3 = MenuItem("Ricky", 2.50, 3.50)
+menu3 = MenuItem("Ricky", 2.50, 4.50)
 
 carl = LemonadeStand("carl")
 carl.add_menu_item(menu1)
 carl.add_menu_item(menu2)
 carl.add_menu_item(menu3)
 
-carl.enter_sales_for_today(sales)
+carl.enter_sales_for_today(sales1)
 carl.enter_sales_for_today(sales2)
-carl.sales_of_menu_item_for_day(1, "Ricky Lime")
-#carl.print_sales_for_day()
+carl.enter_sales_for_today(sales3)
+carl.enter_sales_for_today(sales4)
+carl.enter_sales_for_today(sales5)
+carl.enter_sales_for_today(sales6)
+#carl.sales_of_menu_item_for_day(1, "lemonade")
+carl.print_sales_for_day()
 #carl.print_menu()
-
-
-
+print(carl.total_sales_for_menu_item("Ricky"))
+print(carl.profit_for_menu_item("Ricky"))
 main()
