@@ -5,21 +5,14 @@ class MenuItem:
     """MenuItem class is used to create and manage a menu item for a lemonade stand"""
 
     # Annotate variables.
-    _item_name: str
-    _wholesale_cost: float
-    _selling_price: float
+    _item_name: str             # Menu item name.
+    _wholesale_cost: float      # Menu item wholesale price.
+    _selling_price: float       # Menu item selling price.
 
     def __init__(self, name: str, wholesale_cost: float, selling_price: float) -> None:
         self._item_name = name
-        if wholesale_cost >= 0:
-            self._wholesale_cost = wholesale_cost
-        else:
-            raise NegativeInputError
-
-        if selling_price >= 0:
-            self._selling_price = selling_price
-        else:
-            raise NegativeInputError
+        self._wholesale_cost = wholesale_cost
+        self._selling_price = selling_price
 
 
     def get_name(self) -> str:
@@ -38,15 +31,11 @@ class SalesForDay:
     """Class that represents sales for a particular day"""
 
     # Annotate variables.
-    _days_open: int
+    _days_open: int             #
     _item_log: dict
 
-    def __init__(self, num_of_days: int, sales_log: dict):
-        if num_of_days >= 0:
-            self._days_open = num_of_days
-        else:
-            raise NegativeInputError
-
+    def __init__(self, num_of_days: int, sales_log: dict) -> None:
+        self._days_open = num_of_days
         self._item_log = sales_log
 
     def get_day(self) -> int:
@@ -72,7 +61,7 @@ class LemonadeStand:
         self._sales_for_day_log = []
 
     def get_name(self) -> str:
-        """Method to retrieve lemonade stand name"""
+        """Method to retrieve lemonade stand name."""
         return self._stand_name
 
     def add_menu_item(self, menu) -> None:
@@ -87,11 +76,11 @@ class LemonadeStand:
         """Method takes a dictionary of daily sales, and confirms that all items in the dictionary
         match corresponding items in the menu item dictionary. If all items match, an object
         of sales for day is created containing the current day, and the dictionary of daily sales."""
-        test: bool = True
+        valid_menu_items: bool = True
         for key in sale_item:
             if not key in self._menu_item_dict:
-                test = False
-        if test == True:
+                valid_menu_items = False
+        if valid_menu_items:
             day_sales = SalesForDay(self._current_day, sale_item)
             self._sales_for_day_log.append(day_sales)
             self._current_day += 1
@@ -105,19 +94,12 @@ class LemonadeStand:
         """Method that takes a day value and item, and returns that item's sale amount for
         the given day."""
         for i in self._sales_for_day_log:
-           if i.get_day() == day_num:
-               day_menu = i.get_sales_dict()
-               if menu_item in day_menu:
-                  return(day_menu.get(menu_item))
-               else:
-                   return 0
-            #for j in i:
-                #if day_num == j:
-                   #print(j.get_sales_dict())
-                   #print(daily_sales)
-
-                   #if menu_item in day_sales:
-                       #print(day_sales.get(menu_item))
+            if i.get_day() == day_num:
+                day_menu = i.get_sales_dict()
+                if menu_item in day_menu:
+                    return day_menu.get(menu_item)
+                else:
+                    return 0
 
     def total_sales_for_menu_item(self, menu_item_name: str) -> int:
         """Method that takes a menu item, and returns the total sales for that menu item."""
@@ -125,25 +107,23 @@ class LemonadeStand:
         total: int = 0
         for i in self._sales_for_day_log:
             item_amount = (carl.sales_of_menu_item_for_day(i.get_day(), menu_item_name))
-            #print(item_amount)
             total += item_amount
-
         return total
 
     def profit_for_menu_item(self, menu_item: str) -> float:
         """Method that takes a menu item, and returns that menu item's total profits."""
         if menu_item in self._menu_item_dict:
-           val = self._menu_item_dict[menu_item]
-           return((val.get_selling_price() - val.get_wholesale_cost()) * (carl.total_sales_for_menu_item(menu_item)))
+            val = self._menu_item_dict[menu_item]
+            return(val.get_selling_price() - val.get_wholesale_cost()) * (carl.total_sales_for_menu_item(menu_item))
 
     def total_profit_stand(self) -> float:
         """Method that calculates a lemonade stand's total profits."""
+        # Annotate variables
+        total = 0
         keys_list = list(self._menu_item_dict.keys())
-        print(keys_list)
         for i in keys_list:
-            item = i
-            print(carl.profit_for_menu_item(item))
-
+            total += carl.profit_for_menu_item(i)
+        return total
 
 
 
@@ -183,8 +163,8 @@ sales6 = {
 ##sales1 = SalesForDay(20, sales)
 ##print(sales1.get_day())
 ##print(sales1.get_sales_dict())
-menu1 = MenuItem("Lime Ricky", 2.50, 3.50)
-menu2 = MenuItem("Lim", 2.50, 3.50)
+menu1 = MenuItem("Lime Ricky", 2.50, 5.50)
+menu2 = MenuItem("Lim", 2.50, 6.50)
 menu3 = MenuItem("Ricky", 2.50, 4.50)
 
 carl = LemonadeStand("carl")
@@ -201,7 +181,7 @@ carl.enter_sales_for_today(sales6)
 #carl.sales_of_menu_item_for_day(1, "lemonade")
 #carl.print_sales_for_day()
 #carl.print_menu()
-print(carl.total_sales_for_menu_item("Ricky"))
-print(carl.profit_for_menu_item("Ricky"))
+print(carl.total_sales_for_menu_item("Lim"))
+print(carl.profit_for_menu_item("Lim"))
 carl.total_profit_stand()
 main()
