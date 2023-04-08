@@ -109,6 +109,8 @@ class LemonadeStand:
                day_menu = i.get_sales_dict()
                if menu_item in day_menu:
                   return(day_menu.get(menu_item))
+               else:
+                   return 0
             #for j in i:
                 #if day_num == j:
                    #print(j.get_sales_dict())
@@ -122,8 +124,10 @@ class LemonadeStand:
         # Annotate variables
         total: int = 0
         for i in self._sales_for_day_log:
-            item_amount = carl.sales_of_menu_item_for_day(i.get_day(), menu_item_name)
+            item_amount = (carl.sales_of_menu_item_for_day(i.get_day(), menu_item_name))
+            #print(item_amount)
             total += item_amount
+
         return total
 
     def profit_for_menu_item(self, menu_item: str) -> float:
@@ -138,7 +142,7 @@ class LemonadeStand:
         print(keys_list)
         for i in keys_list:
             item = i
-            #print(carl.profit_for_menu_item("Ricky"))
+            print(carl.profit_for_menu_item(item))
 
 
 
@@ -195,7 +199,7 @@ carl.enter_sales_for_today(sales4)
 carl.enter_sales_for_today(sales5)
 carl.enter_sales_for_today(sales6)
 #carl.sales_of_menu_item_for_day(1, "lemonade")
-carl.print_sales_for_day()
+#carl.print_sales_for_day()
 #carl.print_menu()
 print(carl.total_sales_for_menu_item("Ricky"))
 print(carl.profit_for_menu_item("Ricky"))
